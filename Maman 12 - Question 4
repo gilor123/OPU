@@ -1,0 +1,204 @@
+#Title: Maman 12 question 4 -a
+#Author - Gil Or 
+#Version - 25/07/2020
+#Description- prints the Sum (signed) & Sum squares in an array
+#input - .byte array of 10 numbers 
+#Output - prints the Sum (signed) & Sum squares of the numbers in the array 
+
+################# Data Segment #######################
+
+.data 
+array: .byte 23,-2,45,67,89,12,-100,0,120,6
+SumString: .asciiz "The sum of the array(sign) is:"
+SumSquare: .asciiz "The sum of the squares(sign) is:"
+NewRow: .asciiz "\n"
+
+################ Code Segment #########################
+
+.text 
+#prints the sum of the 10 numbers in the array
+#also prints the sum of the squared numbers in the array
+
+.globl main
+main: 
+
+	la $t0,array		#load the adress of the array 
+	li $t1,0		#1=0 , for the loop 
+	li $s0,0		#sum=0
+	li $s1,0		#sumsquare=0
+
+sumloop:
+	sltiu $t3,$t1,10 	#set $t3 to be 1 as long as i<10, loop termination condition
+	beq $t3,0,out		#out the loop when sum the 10 numbers 
+	lb  $t4,($t0)		#load the number in the array into $t4
+	add $s0,$s0,$t4		#sum+array[i] ,adding the value of the correct cell to the sum 
+	mul $t9,$t4,$t4		#(array[i]^2, calculates the squre of the value in the correct cell in the array
+	add $s1,$s1,$t9		#sumsquare+(array[i]^2 add to sumsqure 
+
+	addiu $t0,$t0,1		#add 1 for the array - to the next number
+	addiu $t1,$t1,1		#i+1
+	j sumloop
+
+out:
+	li $v0,4 		#load print word instruction 
+	la $a0,SumString	#load the address of SumString 
+	syscall			#prints "the sum of the array(sign) is:"
+	li $v0,1		#load print integer instruction 
+	add $a0,$zero,$s0	#load sum to $a0 register 
+	syscall 		#prints the sum of the cells in the array 
+	li $v0,4		#load print word instruction 
+	la $a0,NewRow		#load new row
+	syscall			#prints new row
+	la $a0,SumSquare	#load sum square required string 
+	syscall			#prints "The sum of the squares(sign) is:"
+	li $v0,1		#load print integer instruction 
+	add $a0,$zero,$s1	#load sum squares to $a0 register 
+	syscall
+
+	li $v0,10		#load exit instruction
+	syscall			#progrem termination 
+
+###################################################################################################################################
+
+#Title: Maman 12 question 4 -b
+#Author - Gil Or 
+#Version - 25/07/2020
+#Description- prints the differences of each pair of Adjacent numbers in an array 
+#input - .byte array of 10 numbers 
+#Output - prints the differences of each pair of Adjacent numbers in an array 
+
+################# Data Segment #######################
+
+.data 
+array: .byte 23,-2,45,67,89,12,-100,0,120,6
+Differences: .asciiz "The differenc of each pair of number(sign) in the array is:"
+NewRow: .asciiz "\n"
+Comma: .asciiz ","
+
+################ Code Segment #########################
+
+.text 
+
+.globl main
+main: 
+
+	la $t0,array		#load the adress of the array 
+	li $t1,1		#1=1 , for the loop 
+	li $s0,0		#correct pair difference=0
+
+	la $a0,Differences	#load required string 
+	li $v0,4 		#load print word instruction 
+	syscall			#prints "The differenc of each pair of number(sign) in the array is:"
+	la $a0,NewRow		#loads a new row 
+	syscall			#prints a new row 
+
+diffloop:
+	slti $t2,$t1,10 	#set $t2 to be 1 as long as j<10, loop termination condition
+	beq $t2,0,out		#out the loop when the correct cell is the last and there is no left differences 
+	lb $t4,($t0)		#load the number in the array to $t4 - array[i]
+	addiu $t0,$t0,1		#add 1 for the array - to the next number
+	lb $t5,($t0)		#load the numbe	r in the array into $t5 - array[i+1]
+	sub $s0,$t4,$t5		#array[i]-array[i+1],calculates the difference
+
+	li $v0,1		#load print integer instruction 
+	add $a0,$zero,$s0	#load difference to $a0 register 
+	syscall 		#prints the sum of the cells in the array 
+
+	li $v0,4 		#load print word instruction 
+	la $a0,Comma		#load a comma
+	syscall			#prints the char
+
+	addi $t1,$t1,1		#i+1
+	j diffloop
+
+out:
+	li $v0,10		#load exit instruction
+	syscall			#progrem termination 
+
+
+##############################################################################################################################################
+
+#Title: Maman 12 question 4 -c
+#Author - Gil Or 
+#Version - 25/07/2020
+#Description- prints the unsigned array, the Sum (unsigned) & Sum squares in an array
+#input - .byte array of 10 numbers 
+#Output - prints the unsigned array, the Sum (unsigned) & Sum squares in an array
+
+################# Data Segment #######################
+
+.data 
+array: .byte 23,-2,45,67,89,12,-100,0,120,6
+Unsigned: .asciiz "The array as unsign numbers:"
+UnsignedSum: .asciiz "The sum of the array(unsign)is:"
+UnsignedSquare: .asciiz "The sum of the squares(unsign) is:"
+NewRow: .asciiz "\n"
+Comma: .asciiz ","
+
+################ Code Segment #########################
+
+.text 
+
+.globl main
+main: 
+
+	la $t0,array		#load the adress of the array 
+	li $t1,0		#1=0 , for the loop 
+	li $s0,0		#UnsignedSum=0
+	li $s1,0		#unsignedSquaredSum-0
+
+	la $a0,Unsigned		#load required string 
+	li $v0,4 		#load print word instruction 
+	syscall			#prints "The differenc of each pair of number(sign) in the array is:"
+	la $a0,NewRow		#loads a new row 
+	syscall			#prints a new row 
+
+loop:
+	slti $t2,$t1,10 	#set $t2 to be 1 as long as j<10, loop termination condition
+	beq $t2,0,out	#out the loop when the correct cell is the last and there is no left differences 
+	lbu $t4,($t0)		#load the number in the array to $t4 , array[i]
+	addu $s0,$s0,$t4	#add a value to the unsigned summation
+	mul $t5,$t4,$t4		#calcualtes the squared number 
+	addu $s1,$s1,$t5	#add a squared value for the squared sum 
+
+
+	li $v0,1		#load print integer instruction 
+	add $a0,$zero,$t4	#load unsigned number to $a0 register 
+	syscall 		#prints unsigned number 
+
+	li $v0,4 		#load print word instruction 
+	la $a0,Comma		#load a comma
+	syscall			#prints the char
+
+	addiu $t0,$t0,1		#add 1 for the array - to the next number
+	addi $t1,$t1,1		#i+1
+	j loop
+
+out:
+	li $v0,4 		#load print word instruction 
+	la $a0,NewRow		#loads a new row 
+	syscall			#prints a new row 
+
+	la $a0,UnsignedSum	#load the unsigned sum string 
+	syscall 		#prints the unsigned sum string 
+
+	li $v0,1		#load print integer instruction 
+	addu $a0,$zero,$s0	#add sum unsigned to $a0 register
+	syscall 		#prints unsigned sum 
+
+	li $v0,4 		#load print word instruction 
+	la $a0,NewRow		#loads a new row 
+	syscall			#prints a new row 
+
+	la $a0,UnsignedSquare	#load the unsigned sum string 
+	syscall 		#prints the unsigned sum string 
+
+	li $v0,1		#load print integer instruction 
+	addu $a0,$zero,$s1	#add sum unsigned to $a0 register
+	syscall 		#prints unsigned sum 
+
+	li $v0,10		#load exit instruction
+	syscall			#progrem termination 
+
+
+

@@ -1,0 +1,138 @@
+#Title: Maman 12 question 4 -a
+#Author - Gil Or 
+#Version - 12/08/2020
+#Description- prints the Sum (signed) & Sum squares in an array
+#input - .byte array of 10 numbers 
+#Output - prints the Sum (signed) & Sum squares of the numbers in the array 
+
+#please note - this is my first assembling programming and I used internally many notes- to improve my understanding
+
+################# Data Segment #######################
+
+.data 
+array: .byte 23,-2,45,67,89,12,-100,0,120,6
+SumString: .asciiz "\nThe sum of the array(sign) is:"
+SumSquare: .asciiz "\nThe sum of the squares(sign) is:"
+Differences: .asciiz "\nThe difference of each pair of number(sign) in the array is:\n"
+Unsigned: .asciiz "\nThe array as unsign numbers:\n"
+UnsignedSum: .asciiz "\nThe sum of the array(unsign)is:"
+UnsignedSquare: .asciiz "\nThe sum of the squares(unsign) is:"
+
+################ Code Segment #########################
+
+.text 
+#prints the sum of the 10 numbers in the array
+#also prints the sum of the squared numbers in the array
+
+.globl main
+main: 
+
+# Sum + SumSquare section
+
+	li $v0,4 			#load print word instruction 
+	la $a0,SumString		#load the address of SumString 
+	syscall				#prints "the sum of the array(sign) is:"
+	
+	li $t1,0			#i=0 , index for the loop 
+	li $a0,0			#sum=0
+	li $t2,0			#sumsquare=0
+
+sumloop:
+	lb  $t3,array($t1)		#load the number in the array into $t3
+	add $a0,$a0,$t3			#sum+array[i] ,adding the value of the correct cell to the sum 
+	mul $t3,$t3,$t3			#(array[i]^2, calculates the squre of the value in the correct cell in the array
+	add $t2,$t2,$t3			#sumsquare+(array[i]^2) add to sumsqure 	
+	addi $t1,$t1,1			#i+1
+	bne $t1,10,sumloop		#out condition when, if the index isn't equal to 10 - another iteration
+	
+	li $v0,1			#load print integer instruction 
+	syscall 			#prints the sum of the cells in the array 
+
+	li $v0,4 			#load print word instruction 
+	la $a0,SumSquare		#load sum square required string 
+	syscall				#prints "The sum of the squares(sign) is:"
+	li $v0,1			#load print integer instruction 
+	move $a0,$t2			#move sum squares to $a0 register 
+	syscall
+	
+# Difference section
+
+	la $a0,Differences		#load required string 
+	li $v0,4 			#load print word instruction 
+	syscall				#prints "The differenc of each pair of number(sign) in the array is:"
+	
+	la $t0,array			#load the adress of the array 
+	addi $t1, $t0, 10		# mark the last number of the array for the loop out condition
+	lb $t2, 0($t0)			#save the first veriable for the difference
+	addi $t0,$t0,1			#save the next number in the array
+
+diffloop:
+	lb $t3,0($t0)			#load the number in the array to $t3 - array[i]
+	sub  $a0,$t2,$t3 		#array[i]-array[i+1],calculates the difference
+	li $v0,1			#load print integer instruction 
+	syscall 			#prints the difference of the cells i
+	
+	li $v0,11 			#load print char instruction 
+	la $a0,','			#load a comma
+	syscall				#prints the comma
+	
+	move $t2,$t3			#set array[i] to be array [i+1]
+	addi $t0,$t0,1			#set array [i+1] to be array [i+2]
+	bne $t0,$t1,diffloop		#as long as I'm not finishing checking the array make additional iteration
+
+# unsign section 
+
+	la $a0,Unsigned			#load required string 
+	li $v0,4 			#load print word instruction 
+	syscall				#prints "The array as unsign numbers:"
+
+	la $t0,array			#load the adress of the array 
+	addi $t1,$t0,10			#save the end of the array as loop out condition
+
+unsignloop:
+	
+	lbu $a0,0($t0)			#load the value to the unsigned number
+	li $v0,1			#load print integer instruction 
+	syscall 			#prints unsigned number 	
+	
+	li $v0,11			#load print char instruction 
+	li $a0,','			#load a comma char
+	syscall				#prints the comma 
+	
+	addi $t0,$t0,1			#check the next number in the array
+	bne $t0,$t1,unsignloop		#as long as I'm not finishing checking the array make additional iteration
+	
+# sum and square unsign section 
+	
+	la $a0,UnsignedSum		#load required string 
+	li $v0,4 			#load print word instruction 
+	syscall				#prints "The sum of the array(unsign)is:"
+	
+	li $a0,0 			#$a0 will be the unsign sum 
+	li $t0,0 			#the index used for the loop
+	li $t1,0			#t1 will be the unsign square
+	
+sumunsignloop:
+	lbu $t2,array($t0)		#load the unsign number in the array
+	add $a0,$a0,$t2 		# add the number to the unsigned sum
+	mul $t2,$t2,$t2			#calculating the square of the numebr 
+	add $t1,$t1,$t2			# add the squared number to the unsign suared sum
+	addi $t0,$t0,1			#i++, checking the next index 
+	bne $t0,10,sumunsignloop	#as long as I'm not finishing checking the array make additional iteration
+	
+	li $v0,1			#load print integer instruction 
+	syscall 			#prints unsigned sum number 
+	li $v0,4			#load print word instruction 
+	la $a0,UnsignedSquare		#load the required string 
+	syscall 			#prints "The sum of the squares(unsign) is:"	
+	
+	move $a0,$t1 			#move the sum square to $a0 register 
+	li $v0,1			#load print integer instruction 	
+	syscall				#prints the unsigned sum square
+
+# exit 
+
+	li $v0,10			#load exit instruction
+	syscall				#progrem termination 
+	
+	

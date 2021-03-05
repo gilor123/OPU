@@ -1,0 +1,32 @@
+	byte_palindrom:             
+    
+      andi $t0,$a1,255   	      #masking the right byte
+      srl $a1,$a1,8   	        #shifting to the next byte
+      andi $t1,$a1,255   	      #repeat
+      srl $a1,$a1,8   	        #repeat
+      andi $t2,$a1,255   	      #repeat
+      srl $a1,$a1,8   	        #repeat
+      andi $t3,$a1,255   	      #repeat
+      srl $a1,$a1,8   	        #repeat
+		
+    	bne $t0,$t3,sum	
+    	bne $t1,$t2,sum	
+      $v1 	li $v1,1 	          #if palindrom updating
+		Sum:
+    	sll $t0,24	              #makes a sign number 32 bit	
+      sra $t0,$t0,24	          
+      sll $t1,24		            #repeat
+      sra $1,$t1,24		          #repeat
+      sll $t2,24		            #repeat
+      sra $t2,$t2,24		        #repeat
+      sll $t3,24		            #repeat
+      sra $t3,$t3,24		        #repeat
+		
+      add $t5,$t0,$t1	          #sum byte 1 and 2 	
+      add $t6,$t2,$t3	          #sum bytes 4 and 3 	
+	    add $a0,$t5,$t6	
+		
+    	l $v0,1	                  #print int instruction
+	    syscall	
+		
+	jr $ra	

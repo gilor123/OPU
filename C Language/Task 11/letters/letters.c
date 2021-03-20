@@ -18,7 +18,7 @@ int main()
 {
 	int startSnts = 1;						/*status - start a sentence*/
 	int inQuote = 0;						/*status - in a quote */
-	char ch;
+	int ch;
 	
 	printf("\nPlease write any text you'd like to:\n\n");
 	ch = getchar();

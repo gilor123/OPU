@@ -13,17 +13,13 @@ Program:  Get's a number [x] between -25-25 in radians units from the user, than
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
-
-/*Defenitions*/
-
-#define DEVI 0.000001						/*define constant of the required deviation in the question*/
-#define POSITIVE 1
-#define NEGATIVE -1
+#include "data.h"
 
 /*Declarations */
 
 double my_sin (double x);					/*calculate the approximate value of sin x*/
 double myabs(double x);						/* calculate |x| */
+double convertinput (double x);
 
  
 /*Functions*/
@@ -37,6 +33,7 @@ int main ()
 	printf("\nPlease insert a double between -25 to 25. I'll calcualte the approximate sin(x) value.\n\n");
 	scanf("%lf",&x);
 	
+	x = convertinput(x);
 	mysinx = my_sin(x);
 	printf("\nAccording to my calculations, sin(x) is equal to: %f :\n",mysinx);
 
@@ -87,3 +84,15 @@ double myabs (double x)
 	return (-x);
 }
 
+double convertinput (double x)					/*Converts the inputs to the first 365 degrees, to avoid aritmetic overflow*/
+{
+	double y = 1/RADTODEG;					/*z reflects the number of radians in 1 degree*/
+	double z= y*UNITCERCDEGRS;				/*z reflects the number of radians in 360 degrees*/
+	while (myabs(x)>=z)					/*Converts the input to the first 360 degrees - to avoid aritmetic overflow*/
+	{
+		if (x<0)	x+=z;
+		if (x>0)	x-=z;
+	}
+	return x;
+}
+	

@@ -1,0 +1,15 @@
+Start processing assembler file test3.as
+An Error was found in line 1: The syntax of the following data command is not valid: .entryy 
+An Error was found in line 3: Label can not has both external and entry attributes  
+An Error was found in line 5: The register number is not in range  
+An Error was found in line 10: Illegal double comma before the first operand  
+An Error was found in line 18: Illegal empty operand  
+An Error was found in line 24: Duplicated label was found:  R 
+An Error was found in line 30: The following name of command is unrecognized: CNT 
+An Error was found in line 34: An integer is not in the range of the data type  
+An Error was found in line 5: Incorrect number of operands  
+An Error was found in line 10: Incorrect number of operands  
+An Error was found in line 18: Incorrect number of operands  
+An Error was found in line 22: The following label is unrecognized: MAIN 
+An Error was found in line 28: The following label is unrecognized: S 
+The process of the assembler file is over, during the process errors was found
